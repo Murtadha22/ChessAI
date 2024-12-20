@@ -26,6 +26,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            ChessBoardView(chessModel)
         }
         Log.d(Tag, "Chess Board:\n${chessModel.toString()}")
 

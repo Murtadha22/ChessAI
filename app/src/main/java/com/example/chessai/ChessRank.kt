@@ -4,7 +4,7 @@ enum class ChessRank {
     KING,
     QUEEN,
     BISHOP,
-    ROCK,
+    ROOK,
     KNIGHT,
     PAWN
 }
