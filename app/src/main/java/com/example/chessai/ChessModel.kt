@@ -2,6 +2,7 @@ package com.example.chessai
 
 class ChessModel {
     private var piecesBox = mutableMapOf<Pair<Int, Int>, ChessPiece>()
+    private val board: Array<Array<ChessPiece?>> = Array(8) { Array(8) { null } }
 
     init {
         reset()
@@ -51,5 +52,14 @@ class ChessModel {
         }
         desc.append("  0 1 2 3 4 5 6 7")
         return desc.toString()
+    }
+
+    fun movePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
+        val piece = board[fromRow][fromCol]
+        if (piece != null) {
+            // Move the piece
+            board[toRow][toCol] = piece
+            board[fromRow][fromCol] = null
+        }
     }
 }
