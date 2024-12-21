@@ -24,8 +24,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ChessBoardView(chessModel: ChessModel) {
     val boardSize = 8
-    var selectedPiece by remember { mutableStateOf<ChessPiece?>(null) }
-    var selectedSquare by remember { mutableStateOf<Pair<Int, Int>?>(null) }
+    var chessSelectionState by remember { mutableStateOf(ChessSelectionState()) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -37,29 +36,43 @@ fun ChessBoardView(chessModel: ChessModel) {
             Row {
                 for (col in 0 until boardSize) {
                     val piece = chessModel.pieceAt(col, row)
+                    val isValidMove = chessSelectionState.validMoves.contains(Pair(col, row))
+
                     ChessSquare(
                         piece = piece,
                         isWhite = (row + col) % 2 == 0,
                         onClick = {
-                            if (selectedPiece == null){
-                                if(piece != null){
-                                    selectedPiece = piece
-                                    selectedSquare = Pair(col, row)
+                            if (chessSelectionState.selectedPiece == null) {
+                                if (piece != null) {
+                                    chessSelectionState = chessSelectionState.copy(
+                                        selectedPiece = piece,
+                                        selectedSquare = Pair(col, row),
+                                        validMoves = chessModel.getValidMoves(piece)
+                                    )
                                 }
-                            }else{
-                                selectedPiece?.let{
-                                    chessModel.movePiece(selectedSquare?.first ?: 0, selectedSquare?.second ?: 0, col, row)
+                            } else {
+                                if (isValidMove) {
+                                    chessSelectionState.selectedPiece?.let {
+                                        chessModel.movePiece(
+                                            chessSelectionState.selectedSquare?.first ?: 0,
+                                            chessSelectionState.selectedSquare?.second ?: 0,
+                                            col,
+                                            row
+                                        )
+                                    }
                                 }
-                                selectedPiece = null
-                                selectedSquare = null
+                                chessSelectionState = ChessSelectionState()
                             }
-                        }
+                        },
+                        isSelected = (chessSelectionState.selectedSquare == Pair(col, row)),
+                        isValidMove = isValidMove
                         )
                 }
             }
         }
     }
 }
+
 @Composable
 fun getPieceDrawable(piece: ChessPiece?): Int {
     return when (piece?.rank) {
@@ -69,20 +82,30 @@ fun getPieceDrawable(piece: ChessPiece?): Int {
         ChessRank.KNIGHT -> if (piece.player == ChessPlayer.WHITE) R.drawable.knight else R.drawable.knight1
         ChessRank.ROOK -> if (piece.player == ChessPlayer.WHITE) R.drawable.rook else R.drawable.rook1
         ChessRank.PAWN -> if (piece.player == ChessPlayer.WHITE) R.drawable.pawn else R.drawable.pawn1
-        null -> R.drawable.pawn1
+        null -> 0
     }
 }
 
-
 @Composable
-fun ChessSquare(isWhite: Boolean, piece: ChessPiece?, onClick: () -> Unit) {
+fun ChessSquare(
+    isWhite: Boolean,
+    piece: ChessPiece?,
+    onClick: () -> Unit,
+    isSelected: Boolean = false,
+    isValidMove: Boolean = false
+) {
     val backgroundColor =
-        if (isWhite) colorResource(id = R.color.one) else colorResource(id = R.color.zero)
+        when {
+            isSelected -> Color.Blue
+            isValidMove -> Color.Green
+            isWhite -> colorResource(id = R.color.one)
+            else -> colorResource(id = R.color.zero)
+        }
     Box(
         modifier = Modifier
             .size(45.dp)
             .background(color = backgroundColor)
-            .clickable { onClick()},
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ){
         piece?.let {
@@ -92,8 +115,8 @@ fun ChessSquare(isWhite: Boolean, piece: ChessPiece?, onClick: () -> Unit) {
                 contentDescription = null,
                 modifier = Modifier
                     .customShadow(
-                        color = Color.White,
-                        alpha = 0.4f,
+                        color = Color.Gray,
+                        alpha = 0.7f,
                         shadowRadius = 16.dp,
                         borderRadius = 50.dp,
                         offsetY = 6.dp
