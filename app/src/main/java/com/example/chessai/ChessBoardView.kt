@@ -1,5 +1,8 @@
 package com.example.chessai
 
+
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -27,6 +31,10 @@ fun ChessBoardView(chessModel: ChessModel) {
     val boardSize = 8
     var chessSelectionState by remember { mutableStateOf(ChessSelectionState()) }
     var currentPlayer by remember { mutableStateOf(ChessPlayer.WHITE) }
+
+    fun onMoveMade() {}
+    fun onPieceSelected() {}
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -72,8 +80,9 @@ fun ChessBoardView(chessModel: ChessModel) {
                             }
                         },
                         isSelected = (chessSelectionState.selectedSquare == Pair(col, row)),
-                        isValidMove = isValidMove
-                        )
+                        isValidMove = isValidMove, onMoveMade = { onMoveMade() },
+                        onPieceSelected = { onPieceSelected() }
+                    )
                 }
             }
         }
@@ -99,20 +108,42 @@ fun ChessSquare(
     piece: ChessPiece?,
     onClick: () -> Unit,
     isSelected: Boolean = false,
-    isValidMove: Boolean = false
+    isValidMove: Boolean = false,
+    onMoveMade: () -> Unit,
+    onPieceSelected: () -> Unit
 ) {
     val backgroundColor =
         when {
             isWhite -> getChessSquareColors().first
             else -> getChessSquareColors().second
         }
+    val infiniteTransition = rememberInfiniteTransition(label = "")
+    val animatedScale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = if (isSelected) 1.2f else 1f, // Scale up when selected
+        animationSpec = androidx.compose.animation.core.InfiniteRepeatableSpec(
+            animation = androidx.compose.animation.core.keyframes {
+                durationMillis = 1000
+                1.2f at 0 using androidx.compose.animation.core.EaseInOut
+                1f at 1000
+            }
+        ), label = ""
+    )
+
     Box(
         modifier = Modifier
             .size(45.dp)
             .background(color = backgroundColor)
-            .clickable { onClick() },
+            .clickable {
+                onClick()
+                if (isSelected) {
+                    onMoveMade()
+                } else {
+                    onPieceSelected()
+                }
+            },
         contentAlignment = Alignment.Center
-    ){
+    ) {
         if (isValidMove) {
             Image(
                 painter = painterResource(id = R.drawable.ad_adjust_24),
@@ -128,6 +159,7 @@ fun ChessSquare(
                     .size(22.dp)
             )
         }
+
         piece?.let {
             val drawable = getPieceDrawable(it)
             Image(
@@ -142,6 +174,7 @@ fun ChessSquare(
                         offsetY = 6.dp
                     )
                     .size(30.dp)
+                    .scale(if (isSelected) animatedScale else 1f)
             )
         }
     }

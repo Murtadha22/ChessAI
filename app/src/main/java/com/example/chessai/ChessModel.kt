@@ -50,7 +50,7 @@ class ChessModel {
             )
         }
         _piecesBox.value = initialPieces
-        }
+    }
 
 
     fun pieceAt(col: Int, row: Int): ChessPiece? = _piecesBox.value[Pair(col, row)]
@@ -154,8 +154,8 @@ class ChessModel {
                 if (isMoveValid(piece.col, piece.row, col, row)) {
                     validMoves.add(Pair(col, row))
                 }
+            }
         }
-    }
         return validMoves
     }
 }
