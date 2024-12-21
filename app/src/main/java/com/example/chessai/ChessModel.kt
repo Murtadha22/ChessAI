@@ -158,9 +158,4 @@ class ChessModel {
     }
         return validMoves
     }
-
-
-
-
-
 }

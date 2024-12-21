@@ -20,11 +20,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.chessai.ui.theme.getChessSquareColors
 
 @Composable
 fun ChessBoardView(chessModel: ChessModel) {
     val boardSize = 8
     var chessSelectionState by remember { mutableStateOf(ChessSelectionState()) }
+    var currentPlayer by remember { mutableStateOf(ChessPlayer.WHITE) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -43,7 +45,7 @@ fun ChessBoardView(chessModel: ChessModel) {
                         isWhite = (row + col) % 2 == 0,
                         onClick = {
                             if (chessSelectionState.selectedPiece == null) {
-                                if (piece != null) {
+                                if (piece != null && piece.player == currentPlayer) {
                                     chessSelectionState = chessSelectionState.copy(
                                         selectedPiece = piece,
                                         selectedSquare = Pair(col, row),
@@ -59,6 +61,11 @@ fun ChessBoardView(chessModel: ChessModel) {
                                             col,
                                             row
                                         )
+                                        currentPlayer = if (currentPlayer == ChessPlayer.WHITE) {
+                                            ChessPlayer.BLACK
+                                        } else {
+                                            ChessPlayer.WHITE
+                                        }
                                     }
                                 }
                                 chessSelectionState = ChessSelectionState()
@@ -96,10 +103,8 @@ fun ChessSquare(
 ) {
     val backgroundColor =
         when {
-            isSelected -> Color.Blue
-            isValidMove -> Color.Green
-            isWhite -> colorResource(id = R.color.one)
-            else -> colorResource(id = R.color.zero)
+            isWhite -> getChessSquareColors().first
+            else -> getChessSquareColors().second
         }
     Box(
         modifier = Modifier
@@ -108,6 +113,21 @@ fun ChessSquare(
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ){
+        if (isValidMove) {
+            Image(
+                painter = painterResource(id = R.drawable.ad_adjust_24),
+                contentDescription = "Valid Move",
+                modifier = Modifier
+                    .customShadow(
+                        color = Color.Black,
+                        alpha = 0.3f,
+                        shadowRadius = 16.dp,
+                        borderRadius = 50.dp,
+                        offsetY = 6.dp
+                    )
+                    .size(22.dp)
+            )
+        }
         piece?.let {
             val drawable = getPieceDrawable(it)
             Image(
