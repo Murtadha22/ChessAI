@@ -57,5 +57,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation (libs.androidx.animation)
+    implementation ("com.github.bhlangonijr:chesslib:1.3.4")
+
 
 }

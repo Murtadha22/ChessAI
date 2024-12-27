@@ -1,17 +1,18 @@
 package com.example.chessai
 
-
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,18 +20,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.chessai.ui.theme.getChessSquareColors
+import androidx.compose.ui.unit.sp
+import com.example.chessai.components.ChessSquare
+import com.example.chessai.ui.theme.TextColorBackground
+import com.example.chessai.ui.theme.poppinsFontFamily
 
 @Composable
 fun ChessBoardView(chessModel: ChessModel) {
     val boardSize = 8
     var chessSelectionState by remember { mutableStateOf(ChessSelectionState()) }
     var currentPlayer by remember { mutableStateOf(ChessPlayer.WHITE) }
+
+    fun resetGame() {
+        chessModel.reset()
+        chessSelectionState = ChessSelectionState()
+        currentPlayer = ChessPlayer.WHITE
+    }
 
     fun onMoveMade() {}
     fun onPieceSelected() {}
@@ -42,12 +49,16 @@ fun ChessBoardView(chessModel: ChessModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        NewGameButton(onResetGame = { resetGame() })
+
+        Spacer(modifier = Modifier.height(16.dp))
         for (row in 7 downTo 0) {
             Row {
                 for (col in 0 until boardSize) {
                     val piece = chessModel.pieceAt(col, row)
                     val isValidMove = chessSelectionState.validMoves.contains(Pair(col, row))
-
+                    val isOpponentPiece =
+                        isValidMove && piece != null && piece.player != currentPlayer
                     ChessSquare(
                         piece = piece,
                         isWhite = (row + col) % 2 == 0,
@@ -81,6 +92,7 @@ fun ChessBoardView(chessModel: ChessModel) {
                         },
                         isSelected = (chessSelectionState.selectedSquare == Pair(col, row)),
                         isValidMove = isValidMove, onMoveMade = { onMoveMade() },
+                        isOpponentPiece = isOpponentPiece,
                         onPieceSelected = { onPieceSelected() }
                     )
                 }
@@ -88,94 +100,23 @@ fun ChessBoardView(chessModel: ChessModel) {
         }
     }
 }
-
 @Composable
-fun getPieceDrawable(piece: ChessPiece?): Int {
-    return when (piece?.rank) {
-        ChessRank.KING -> if (piece.player == ChessPlayer.WHITE) R.drawable.king else R.drawable.king1
-        ChessRank.QUEEN -> if (piece.player == ChessPlayer.WHITE) R.drawable.queen else R.drawable.queen1
-        ChessRank.BISHOP -> if (piece.player == ChessPlayer.WHITE) R.drawable.bishop else R.drawable.bishop1
-        ChessRank.KNIGHT -> if (piece.player == ChessPlayer.WHITE) R.drawable.knight else R.drawable.knight1
-        ChessRank.ROOK -> if (piece.player == ChessPlayer.WHITE) R.drawable.rook else R.drawable.rook1
-        ChessRank.PAWN -> if (piece.player == ChessPlayer.WHITE) R.drawable.pawn else R.drawable.pawn1
-        null -> 0
-    }
-}
-
-@Composable
-fun ChessSquare(
-    isWhite: Boolean,
-    piece: ChessPiece?,
-    onClick: () -> Unit,
-    isSelected: Boolean = false,
-    isValidMove: Boolean = false,
-    onMoveMade: () -> Unit,
-    onPieceSelected: () -> Unit
-) {
-    val backgroundColor =
-        when {
-            isWhite -> getChessSquareColors().first
-            else -> getChessSquareColors().second
-        }
-    val infiniteTransition = rememberInfiniteTransition(label = "")
-    val animatedScale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = if (isSelected) 1.2f else 1f, // Scale up when selected
-        animationSpec = androidx.compose.animation.core.InfiniteRepeatableSpec(
-            animation = androidx.compose.animation.core.keyframes {
-                durationMillis = 1000
-                1.2f at 0 using androidx.compose.animation.core.EaseInOut
-                1f at 1000
-            }
-        ), label = ""
-    )
-
-    Box(
+fun NewGameButton(onResetGame: () -> Unit) {
+    Button(
+        onClick = { onResetGame() },
+        shape = CutCornerShape(8.dp),
+        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+            containerColor = TextColorBackground
+        ),
         modifier = Modifier
-            .size(45.dp)
-            .background(color = backgroundColor)
-            .clickable {
-                onClick()
-                if (isSelected) {
-                    onMoveMade()
-                } else {
-                    onPieceSelected()
-                }
-            },
-        contentAlignment = Alignment.Center
+            .width(130.dp)
+            .border(
+                width = 2.dp, color = Color.White, shape = CutCornerShape(8.dp)
+            )
     ) {
-        if (isValidMove) {
-            Image(
-                painter = painterResource(id = R.drawable.ad_adjust_24),
-                contentDescription = "Valid Move",
-                modifier = Modifier
-                    .customShadow(
-                        color = Color.Black,
-                        alpha = 0.3f,
-                        shadowRadius = 16.dp,
-                        borderRadius = 50.dp,
-                        offsetY = 6.dp
-                    )
-                    .size(22.dp)
-            )
-        }
-
-        piece?.let {
-            val drawable = getPieceDrawable(it)
-            Image(
-                painter = painterResource(id = drawable),
-                contentDescription = null,
-                modifier = Modifier
-                    .customShadow(
-                        color = Color.Gray,
-                        alpha = 0.7f,
-                        shadowRadius = 16.dp,
-                        borderRadius = 50.dp,
-                        offsetY = 6.dp
-                    )
-                    .size(30.dp)
-                    .scale(if (isSelected) animatedScale else 1f)
-            )
-        }
+        Text(
+            text = "New Game", fontFamily = poppinsFontFamily, color = Color.White,
+            fontSize = 22.sp
+        )
     }
 }

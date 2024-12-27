@@ -16,9 +16,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://jitpack.io") // Corrected URL syntax
     }
 }
 
 rootProject.name = "ChessAI"
 include(":app")
- 

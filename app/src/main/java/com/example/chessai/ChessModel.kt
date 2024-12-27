@@ -9,12 +9,11 @@ class ChessModel {
     private val _piecesBox = mutableStateOf<Map<Pair<Int, Int>, ChessPiece>>(emptyMap())
     private val piecesBox: Map<Pair<Int, Int>, ChessPiece> get() = _piecesBox.value
 
-
     init {
         reset()
     }
 
-    private fun reset(){
+     fun reset(){
         val initialPieces = mutableMapOf(
             Pair(0, 0) to ChessPiece(0, 0, ChessPlayer.WHITE, ChessRank.ROOK, R.drawable.rook),
             Pair(7, 0) to ChessPiece(7, 0, ChessPlayer.WHITE, ChessRank.ROOK, R.drawable.rook),
@@ -52,7 +51,6 @@ class ChessModel {
         _piecesBox.value = initialPieces
     }
 
-
     fun pieceAt(col: Int, row: Int): ChessPiece? = _piecesBox.value[Pair(col, row)]
 
     override fun toString(): String {
@@ -79,7 +77,6 @@ class ChessModel {
             _piecesBox.value = updatedPieces
         }
     }
-
 
     private fun isMoveValid(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int): Boolean {
         val piece = piecesBox[Pair(fromCol, fromRow)] ?: return false

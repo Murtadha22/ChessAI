@@ -23,6 +23,7 @@ val ChessSquareColorIsWhite = Color(0xFFF4DCF7).copy(alpha = 0.4f)
 val ChessSquareColorIsNotWhite = Color(0xFFF4DCF7).copy(alpha = 0.4f)
 val ChessSquareColorIsSelected = Color(0xE2B7B7B7).copy(alpha = 0.4f)
 val ChessSquareColorIsValidMove = Color(0xE2B7B7B7).copy(alpha = 0.4f)
+val TextColorBackground = Color(0xFF6882AF).copy(alpha = 0.4f)
 
 val ColorSurface = Color.White
 val ColorImageShadow = Color(0xFFfdc228)
