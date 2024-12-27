@@ -1,4 +1,4 @@
-package com.example.chessai
+package com.example.chessai.core
 
 data class ChessSelectionState(
     val selectedPiece: ChessPiece? = null,

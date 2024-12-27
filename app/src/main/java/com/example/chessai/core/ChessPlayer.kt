@@ -1,4 +1,4 @@
-package com.example.chessai
+package com.example.chessai.core
 
 enum class ChessPlayer {
     WHITE,

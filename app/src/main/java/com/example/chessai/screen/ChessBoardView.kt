@@ -1,5 +1,5 @@
 
-package com.example.chessai
+package com.example.chessai.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,13 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,15 +19,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import com.example.chessai.ChessModel
 import com.example.chessai.components.ChessSquare
-import com.example.chessai.ui.theme.TextColorBackground
-import com.example.chessai.ui.theme.poppinsFontFamily
+import com.example.chessai.components.NewGameButton
+import com.example.chessai.core.ChessPlayer
+import com.example.chessai.core.ChessSelectionState
 
 @Composable
 fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
@@ -113,29 +107,8 @@ fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
                 }
             }
         }
-
-
     }
 }
-@Composable
-fun NewGameButton(onResetGame: () -> Unit) {
-    Button(
-        onClick = { onResetGame() },
-        shape = CutCornerShape(8.dp),
-        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-            containerColor = Color.Black
-        ),
-        modifier = Modifier
-            .width(130.dp)
-            .border(
-                width = 2.dp, color = Color.DarkGray, shape = CutCornerShape(8.dp)
-            )
-    ) {
-        Text(
-            text = "New Game", fontFamily = poppinsFontFamily, color = Color.White,
-            fontSize = 22.sp
-        )
-    }
-}
+
 
 

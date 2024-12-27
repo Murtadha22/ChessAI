@@ -13,12 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.chessai.ChessPiece
+import com.example.chessai.core.ChessPiece
 import com.example.chessai.R
-import com.example.chessai.customShadow
 import com.example.chessai.ui.theme.getChessSquareColors
 
 @Composable
@@ -92,7 +90,6 @@ fun ChessSquare(
                 )
             }
         }
-
         piece?.let {
             val drawable = getPieceDrawable(it)
             Image(

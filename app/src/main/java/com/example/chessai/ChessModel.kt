@@ -2,6 +2,9 @@ package com.example.chessai
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.mutableStateOf
+import com.example.chessai.core.ChessPiece
+import com.example.chessai.core.ChessPlayer
+import com.example.chessai.core.ChessRank
 import kotlin.math.abs
 
 class ChessModel {

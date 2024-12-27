@@ -1,4 +1,4 @@
-package com.example.chessai
+package com.example.chessai.components
 
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier

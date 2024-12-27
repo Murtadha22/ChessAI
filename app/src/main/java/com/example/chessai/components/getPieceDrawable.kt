@@ -1,9 +1,9 @@
 package com.example.chessai.components
 
 import androidx.compose.runtime.Composable
-import com.example.chessai.ChessPiece
-import com.example.chessai.ChessPlayer
-import com.example.chessai.ChessRank
+import com.example.chessai.core.ChessPiece
+import com.example.chessai.core.ChessPlayer
+import com.example.chessai.core.ChessRank
 import com.example.chessai.R
 
 @Composable

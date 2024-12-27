@@ -11,6 +11,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.chessai.components.Cutsene
+import com.example.chessai.screen.ChessBoardView
 
 
 private const val Tag = "MainActivity"
