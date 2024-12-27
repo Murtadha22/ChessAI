@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.Button
@@ -57,52 +58,63 @@ fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
     ) {
         NewGameButton(onResetGame = { resetGame() })
         Spacer(modifier = Modifier.height(16.dp))
-        for (row in 7 downTo 0) {
-            Row {
-                for (col in 0 until boardSize) {
-                    val piece = chessModel.pieceAt(col, row)
-                    val isValidMove = chessSelectionState.validMoves.contains(Pair(col, row))
-                    val isOpponentPiece =
-                        isValidMove && piece != null && piece.player != currentPlayer
-                    ChessSquare(
-                        piece = piece,
-                        isWhite = (row + col) % 2 == 0,
-                        onClick = {
-                            if (chessSelectionState.selectedPiece == null) {
-                                if (piece != null && piece.player == currentPlayer) {
-                                    chessSelectionState = chessSelectionState.copy(
-                                        selectedPiece = piece,
-                                        selectedSquare = Pair(col, row),
-                                        validMoves = chessModel.getValidMoves(piece)
-                                    )
-                                }
-                            } else {
-                                if (isValidMove) {
-                                    chessSelectionState.selectedPiece?.let {
-                                        chessModel.movePiece(
-                                            chessSelectionState.selectedSquare?.first ?: 0,
-                                            chessSelectionState.selectedSquare?.second ?: 0,
-                                            col,
-                                            row
-                                        )
-                                        currentPlayer = if (currentPlayer == ChessPlayer.WHITE) {
-                                            ChessPlayer.BLACK
-                                        } else {
-                                            ChessPlayer.WHITE
+
+        androidx.compose.foundation.layout.Box(
+            modifier = Modifier
+                .border(width = 4.dp, color = Color.DarkGray, shape = CutCornerShape(8.dp))
+                .padding(6.dp)
+        ){
+            Column {
+                for (row in 7 downTo 0) {
+                    Row {
+                        for (col in 0 until boardSize) {
+                            val piece = chessModel.pieceAt(col, row)
+                            val isValidMove = chessSelectionState.validMoves.contains(Pair(col, row))
+                            val isOpponentPiece =
+                                isValidMove && piece != null && piece.player != currentPlayer
+                            ChessSquare(
+                                piece = piece,
+                                isWhite = (row + col) % 2 == 0,
+                                onClick = {
+                                    if (chessSelectionState.selectedPiece == null) {
+                                        if (piece != null && piece.player == currentPlayer) {
+                                            chessSelectionState = chessSelectionState.copy(
+                                                selectedPiece = piece,
+                                                selectedSquare = Pair(col, row),
+                                                validMoves = chessModel.getValidMoves(piece)
+                                            )
                                         }
+                                    } else {
+                                        if (isValidMove) {
+                                            chessSelectionState.selectedPiece?.let {
+                                                chessModel.movePiece(
+                                                    chessSelectionState.selectedSquare?.first ?: 0,
+                                                    chessSelectionState.selectedSquare?.second ?: 0,
+                                                    col,
+                                                    row
+                                                )
+                                                currentPlayer = if (currentPlayer == ChessPlayer.WHITE) {
+                                                    ChessPlayer.BLACK
+                                                } else {
+                                                    ChessPlayer.WHITE
+                                                }
+                                            }
+                                        }
+                                        chessSelectionState = ChessSelectionState()
                                     }
-                                }
-                                chessSelectionState = ChessSelectionState()
-                            }
-                        },
-                        isSelected = (chessSelectionState.selectedSquare == Pair(col, row)),
-                        isValidMove = isValidMove, onMoveMade = { onMoveMade() },
-                        isOpponentPiece = isOpponentPiece,
-                        onPieceSelected = { onPieceSelected() }
-                    )
+                                },
+                                isSelected = (chessSelectionState.selectedSquare == Pair(col, row)),
+                                isValidMove = isValidMove, onMoveMade = { onMoveMade() },
+                                isOpponentPiece = isOpponentPiece,
+                                onPieceSelected = { onPieceSelected() }
+                            )
+                        }
+                    }
                 }
             }
         }
+
+
     }
 }
 @Composable
