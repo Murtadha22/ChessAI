@@ -49,6 +49,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -58,6 +60,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation (libs.androidx.animation)
     implementation ("com.github.bhlangonijr:chesslib:1.3.4")
+    implementation ("com.airbnb.android:lottie-compose:5.0.0")
+    implementation ("androidx.navigation:navigation-compose:2.7.0")
 
 
 }

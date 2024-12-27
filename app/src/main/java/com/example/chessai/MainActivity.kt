@@ -6,6 +6,11 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 
 private const val Tag = "MainActivity"
@@ -15,10 +20,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ChessBoardView(chessModel)
+            val navController = rememberNavController()
+            NavigationGraph(navController = navController)
         }
         Log.d(Tag, "Chess Board:\n${chessModel.toString()}")
 
     }
+    @Composable
+    fun NavigationGraph(navController: NavHostController) {
+        NavHost(navController = navController, startDestination = "ChessBoardView") {
+            composable("ChessBoardView") {
+                ChessBoardView(navController = navController, chessModel = ChessModel())
+            }
+            composable("Cutsene") {
+                Cutsene(navController = navController)
+            }
+        }
+    }
 }
-

@@ -1,3 +1,4 @@
+
 package com.example.chessai
 
 import androidx.compose.foundation.background
@@ -21,14 +22,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.example.chessai.components.ChessSquare
 import com.example.chessai.ui.theme.TextColorBackground
 import com.example.chessai.ui.theme.poppinsFontFamily
 
 @Composable
-fun ChessBoardView(chessModel: ChessModel) {
+fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
     val boardSize = 8
     var chessSelectionState by remember { mutableStateOf(ChessSelectionState()) }
     var currentPlayer by remember { mutableStateOf(ChessPlayer.WHITE) }
@@ -37,6 +42,7 @@ fun ChessBoardView(chessModel: ChessModel) {
         chessModel.reset()
         chessSelectionState = ChessSelectionState()
         currentPlayer = ChessPlayer.WHITE
+        navController.navigate("Cutsene")
     }
 
     fun onMoveMade() {}
@@ -45,12 +51,11 @@ fun ChessBoardView(chessModel: ChessModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Gray),
+            .background(Color.Unspecified),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         NewGameButton(onResetGame = { resetGame() })
-
         Spacer(modifier = Modifier.height(16.dp))
         for (row in 7 downTo 0) {
             Row {
@@ -106,12 +111,12 @@ fun NewGameButton(onResetGame: () -> Unit) {
         onClick = { onResetGame() },
         shape = CutCornerShape(8.dp),
         colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-            containerColor = TextColorBackground
+            containerColor = Color.Black
         ),
         modifier = Modifier
             .width(130.dp)
             .border(
-                width = 2.dp, color = Color.White, shape = CutCornerShape(8.dp)
+                width = 2.dp, color = Color.DarkGray, shape = CutCornerShape(8.dp)
             )
     ) {
         Text(
@@ -120,3 +125,5 @@ fun NewGameButton(onResetGame: () -> Unit) {
         )
     }
 }
+
+

@@ -13,7 +13,7 @@ class ChessModel {
         reset()
     }
 
-     fun reset(){
+    fun reset(){
         val initialPieces = mutableMapOf(
             Pair(0, 0) to ChessPiece(0, 0, ChessPlayer.WHITE, ChessRank.ROOK, R.drawable.rook),
             Pair(7, 0) to ChessPiece(7, 0, ChessPlayer.WHITE, ChessRank.ROOK, R.drawable.rook),
