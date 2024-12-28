@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
     }
     @Composable
     fun NavigationGraph(navController: NavHostController) {
-        NavHost(navController = navController, startDestination = "ChessBoardView") {
+        NavHost(navController = navController, startDestination = "CutScene") {
             composable("ChessBoardView") {
                 ChessBoardView(navController = navController, chessModel = ChessModel())
             }
