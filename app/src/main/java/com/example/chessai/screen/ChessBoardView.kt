@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.chessai.ChessModel
+import com.example.chessai.R
 import com.example.chessai.ai.AiEngine
 import com.example.chessai.components.ChessSquare
 import com.example.chessai.components.NewGameButton
@@ -39,19 +40,14 @@ import com.example.chessai.ui.theme.poppinsFontFamily
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-
 @Composable
 fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
-
     val boardSize = 8
-
     var chessSelectionState by remember { mutableStateOf(ChessSelectionState()) }
     var currentPlayer by remember { mutableStateOf(ChessPlayer.WHITE) }
     var isAiCalculating by remember { mutableStateOf(false) }
-    9
     var gameOverMessage by remember { mutableStateOf<String?>(null) }
     var showGameOverDialog by remember { mutableStateOf(false) }
-
     var moveCount by remember { mutableIntStateOf(0) }
 
     fun resetGame() {
@@ -67,16 +63,13 @@ fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
 
     fun checkEndGame(playerJustMoved: ChessPlayer) {
         val opponent = if (playerJustMoved == ChessPlayer.WHITE) ChessPlayer.BLACK else ChessPlayer.WHITE
-        when {
-            chessModel.isCheckmate(opponent) -> {
-                val winner = if (playerJustMoved == ChessPlayer.WHITE) "White" else "Black"
-                gameOverMessage = "Checkmate! $winner wins."
-                showGameOverDialog = true
-            }
-            chessModel.isStalemate(opponent) -> {
-                gameOverMessage = "Stalemate! It's a draw."
-                showGameOverDialog = true
-            }
+        if (chessModel.isCheckmate(opponent)) {
+            val winner = if (playerJustMoved == ChessPlayer.WHITE) "White" else "Black"
+            gameOverMessage = "Checkmate! $winner wins."
+            showGameOverDialog = true
+        } else if (chessModel.isStalemate(opponent)) {
+            gameOverMessage = "Stalemate! It's a draw."
+            showGameOverDialog = true
         }
     }
 
@@ -97,32 +90,23 @@ fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
             isAiCalculating = false
         }
     }
+
     if (showGameOverDialog) {
         AlertDialog(
             modifier = Modifier
                 .background(Color.LightGray)
                 .border(width = 4.dp, color = Color.Black, shape = CutCornerShape(16.dp)),
-            onDismissRequest = { },
+            onDismissRequest = {},
             confirmButton = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    TextButton(
-                        onClick = { resetGame() }
-                    ) {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    TextButton(onClick = { resetGame() }) {
                         Text(
                             "New Game",
                             fontFamily = poppinsFontFamily,
                             fontSize = 25.sp,
                             color = Color.Black,
                             modifier = Modifier
-                                .border(
-                                    width = 3.dp,
-                                    color = Color.Black,
-                                    shape = CutCornerShape(8.dp)
-                                )
+                                .border(width = 3.dp, color = Color.Black, shape = CutCornerShape(8.dp))
                                 .padding(horizontal = 16.dp, vertical = 8.dp)
                         )
                     }
@@ -134,8 +118,7 @@ fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
                     fontFamily = poppinsFontFamily,
                     fontSize = 45.sp,
                     color = Color.Black,
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
             },
@@ -157,18 +140,13 @@ fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Unspecified),
+        modifier = Modifier.fillMaxSize().background(Color.Unspecified),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         NewGameButton(onResetGame = { resetGame() })
         Spacer(modifier = Modifier.height(16.dp))
-
-        gameOverMessage?.let { msg ->
-        }
-
+        gameOverMessage?.let {}
         Box(
             modifier = Modifier
                 .border(width = 4.dp, color = Color.DarkGray, shape = CutCornerShape(8.dp))
@@ -180,9 +158,7 @@ fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
                         for (col in 0 until boardSize) {
                             val piece = chessModel.pieceAt(col, row)
                             val isValidMove = chessSelectionState.validMoves.contains(col to row)
-                            val isOpponentPiece =
-                                isValidMove && piece != null && piece.player != currentPlayer
-
+                            val isOpponentPiece = isValidMove && piece != null && piece.player != currentPlayer
                             ChessSquare(
                                 piece = piece,
                                 isWhite = ((row + col) % 2 == 0),
@@ -190,10 +166,7 @@ fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
                                 isValidMove = isValidMove,
                                 isOpponentPiece = isOpponentPiece,
                                 onClick = {
-                                    if (currentPlayer == ChessPlayer.BLACK || isAiCalculating || gameOverMessage != null) {
-                                        return@ChessSquare
-                                    }
-
+                                    if (currentPlayer == ChessPlayer.BLACK || isAiCalculating || gameOverMessage != null) return@ChessSquare
                                     if (chessSelectionState.selectedPiece == null) {
                                         if (piece != null && piece.player == currentPlayer) {
                                             chessSelectionState = chessSelectionState.copy(
@@ -202,8 +175,7 @@ fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
                                                 validMoves = chessModel.getValidMoves(piece)
                                             )
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         if (isValidMove) {
                                             chessSelectionState.selectedPiece?.let {
                                                 chessModel.movePiece(
@@ -214,9 +186,7 @@ fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
                                                 )
                                                 moveCount++
                                                 checkEndGame(ChessPlayer.WHITE)
-                                                if (gameOverMessage == null) {
-                                                    currentPlayer = ChessPlayer.BLACK
-                                                }
+                                                if (gameOverMessage == null) currentPlayer = ChessPlayer.BLACK
                                             }
                                         }
                                         chessSelectionState = ChessSelectionState()
