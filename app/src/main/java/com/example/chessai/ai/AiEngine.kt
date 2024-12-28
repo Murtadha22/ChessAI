@@ -1,5 +1,6 @@
 package com.example.chessai.ai
 
+import android.util.Log
 import com.example.chessai.ChessModel
 import com.example.chessai.core.ChessPlayer
 import com.example.chessai.core.ChessRank
@@ -16,7 +17,7 @@ object AiEngine {
         ChessRank.QUEEN  to 900,
         ChessRank.KING   to 10000
     )
-
+    var total = 0
     // Evaluate the board from Black's perspective.
     // Positive score = better for Black. Negative score = better for White.
     fun evaluateBoard(chessModel: ChessModel): Int {
@@ -39,7 +40,7 @@ object AiEngine {
         maxDepth: Int = 3,
         moveNumber: Int = 1,
     ): Pair<Pair<Int, Int>, Pair<Int, Int>>? {
-
+        total = 0
         if (moveNumber == 1) {
             val signature = Openings.detectSimpleOpeningSignature(chessModel)
 
@@ -65,11 +66,13 @@ object AiEngine {
         if (blackMoves.isEmpty()) {
             return null
         }
-        val copy = chessModel.copyOf()
+
         for (move in blackMoves) {
             val from = move.first
             val to = move.second
+
             // Copy the board so we can simulate the future moves on
+            val copy = chessModel.copyOf()
             copy.movePiece(from.first, from.second, to.first, to.second)
 
             val eval = alphaBeta(
@@ -87,6 +90,7 @@ object AiEngine {
             }
         }
 
+        Log.d("AiEngine", "total evaluated moves: ${total}")
         return bestMove
     }
 
@@ -120,14 +124,17 @@ object AiEngine {
         if (possibleMoves.isEmpty()) {
             return if (isBlackTurn) (Int.MIN_VALUE / 2) else (Int.MAX_VALUE / 2)
         }
+
         if (isBlackTurn) {
             // Maximize for black
             var bestScore = Int.MIN_VALUE
             for (move in possibleMoves) {
-                model.movePiece(move.first.first, move.first.second, move.second.first, move.second.second)
+                total++
+                val copy = model.copyOf()
+                copy.movePiece(move.first.first, move.first.second, move.second.first, move.second.second)
 
                 val score = alphaBeta(
-                    model,
+                    copy,
                     depth + 1,
                     maxDepth,
                     alphaVar,
@@ -144,9 +151,12 @@ object AiEngine {
         } else {
             var bestScore = Int.MAX_VALUE
             for (move in possibleMoves) {
-                model.movePiece(move.first.first, move.first.second, move.second.first, move.second.second)
+                total++
+                val copy = model.copyOf()
+                copy.movePiece(move.first.first, move.first.second, move.second.first, move.second.second)
+
                 val score = alphaBeta(
-                    model,
+                    copy,
                     depth + 1,
                     maxDepth,
                     alphaVar,

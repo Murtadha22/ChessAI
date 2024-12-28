@@ -1,6 +1,5 @@
 package com.example.chessai
 
-
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -13,7 +12,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.chessai.components.CutScene
 import com.example.chessai.screen.ChessBoardView
-
 
 private const val Tag = "MainActivity"
 class MainActivity : ComponentActivity() {
