@@ -19,12 +19,12 @@ import com.example.chessai.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun Cutsene(navController: NavHostController) {
+fun CutScene(navController: NavHostController) {
 
     LaunchedEffect(key1 = true) {
-        delay(4000L)
+        delay(3000L)
         navController.navigate("ChessBoardView") {
-            popUpTo("Cutsene") { inclusive = true }
+            popUpTo("CutScene") { inclusive = true }
         }
     }
     Column(

@@ -59,7 +59,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation (libs.androidx.animation)
-    implementation ("com.github.bhlangonijr:chesslib:1.3.4")
     implementation ("com.airbnb.android:lottie-compose:5.0.0")
     implementation ("androidx.navigation:navigation-compose:2.7.0")
 

@@ -11,7 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.chessai.components.Cutsene
+import com.example.chessai.components.CutScene
 import com.example.chessai.screen.ChessBoardView
 
 
@@ -34,8 +34,8 @@ class MainActivity : ComponentActivity() {
             composable("ChessBoardView") {
                 ChessBoardView(navController = navController, chessModel = ChessModel())
             }
-            composable("Cutsene") {
-                Cutsene(navController = navController)
+            composable("CutScene") {
+                CutScene(navController = navController)
             }
         }
     }
