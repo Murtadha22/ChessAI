@@ -33,6 +33,7 @@ fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
     var moveCount by remember { mutableIntStateOf(0) }
 
     fun resetGame() {
+        navController.navigate("CutScene")
         chessModel.reset()
         chessSelectionState = ChessSelectionState()
         currentPlayer = ChessPlayer.WHITE
@@ -40,7 +41,6 @@ fun ChessBoardView(navController: NavHostController, chessModel: ChessModel) {
         gameOverMessage = null
         showGameOverDialog = false
         moveCount = 0
-        navController.navigate("CutScene")
     }
 
     fun checkEndGame(playerJustMoved: ChessPlayer) {

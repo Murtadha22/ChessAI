@@ -77,21 +77,21 @@ class ChessModel {
         updateFenAfterMove()
     }
 
-    fun undoMove() {
-        if (moveHistory.isEmpty()) return
-        val lastMove = moveHistory.removeLast()
-        unmakeMoveUI(lastMove)
-        undoneMoves.add(lastMove)
-        updateFenAfterMove()
-    }
-
-    fun redoMove() {
-        if (undoneMoves.isEmpty()) return
-        val move = undoneMoves.removeLast()
-        makeMoveUI(move)
-        moveHistory.add(move)
-        updateFenAfterMove()
-    }
+//    fun undoMove() {
+//        if (moveHistory.isEmpty()) return
+//        val lastMove = moveHistory.removeLast()
+//        unmakeMoveUI(lastMove)
+//        undoneMoves.add(lastMove)
+//        updateFenAfterMove()
+//    }
+//
+//    fun redoMove() {
+//        if (undoneMoves.isEmpty()) return
+//        val move = undoneMoves.removeLast()
+//        makeMoveUI(move)
+//        moveHistory.add(move)
+//        updateFenAfterMove()
+//    }
 
     private fun makeMoveUI(move: Move) {
         val newBoard = _fenPosition.value.board.clone()
