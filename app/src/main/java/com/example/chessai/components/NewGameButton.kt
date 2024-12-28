@@ -27,7 +27,7 @@ fun NewGameButton(onResetGame: () -> Unit) {
             )
     ) {
         Text(
-            text = "New Game", fontFamily = poppinsFontFamily, color = Color.White,
+            text = "Restart", fontFamily = poppinsFontFamily, color = Color.White,
             fontSize = 22.sp
         )
     }

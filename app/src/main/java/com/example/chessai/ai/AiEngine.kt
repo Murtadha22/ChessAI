@@ -65,13 +65,11 @@ object AiEngine {
         if (blackMoves.isEmpty()) {
             return null
         }
-
+        val copy = chessModel.copyOf()
         for (move in blackMoves) {
             val from = move.first
             val to = move.second
-
             // Copy the board so we can simulate the future moves on
-            val copy = chessModel.copyOf()
             copy.movePiece(from.first, from.second, to.first, to.second)
 
             val eval = alphaBeta(
@@ -122,16 +120,14 @@ object AiEngine {
         if (possibleMoves.isEmpty()) {
             return if (isBlackTurn) (Int.MIN_VALUE / 2) else (Int.MAX_VALUE / 2)
         }
-
         if (isBlackTurn) {
             // Maximize for black
             var bestScore = Int.MIN_VALUE
             for (move in possibleMoves) {
-                val copy = model.copyOf()
-                copy.movePiece(move.first.first, move.first.second, move.second.first, move.second.second)
+                model.movePiece(move.first.first, move.first.second, move.second.first, move.second.second)
 
                 val score = alphaBeta(
-                    copy,
+                    model,
                     depth + 1,
                     maxDepth,
                     alphaVar,
@@ -148,11 +144,9 @@ object AiEngine {
         } else {
             var bestScore = Int.MAX_VALUE
             for (move in possibleMoves) {
-                val copy = model.copyOf()
-                copy.movePiece(move.first.first, move.first.second, move.second.first, move.second.second)
-
+                model.movePiece(move.first.first, move.first.second, move.second.first, move.second.second)
                 val score = alphaBeta(
-                    copy,
+                    model,
                     depth + 1,
                     maxDepth,
                     alphaVar,
