@@ -23,8 +23,6 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             NavigationGraph(navController = navController)
         }
-        Log.d(Tag, "Chess Board:\n${chessModel.toString()}")
-
     }
     @Composable
     fun NavigationGraph(navController: NavHostController) {

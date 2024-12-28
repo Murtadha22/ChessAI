@@ -17,7 +17,6 @@ object AiEngine {
         ChessRank.QUEEN to 900,
         ChessRank.KING to 10000
     )
-    var total = 0
 
     fun evaluateBoard(chessModel: ChessModel): Int {
         var score = 0
@@ -29,7 +28,6 @@ object AiEngine {
     }
 
     fun findBestMove(chessModel: ChessModel, maxDepth: Int = 3, moveNumber: Int = 1): Pair<Pair<Int, Int>, Pair<Int, Int>>? {
-        total = 0
         if (moveNumber == 1) {
             val signature = Openings.detectSimpleOpeningSignature(chessModel)
             if (signature != null && Openings.openingBook.containsKey(signature)) {
@@ -54,7 +52,6 @@ object AiEngine {
                 bestMove = (fromCol to fromRow) to (toCol to toRow)
             }
         }
-        Log.d("AiEngine", "total evaluated moves: $total")
         return bestMove
     }
 
@@ -67,7 +64,6 @@ object AiEngine {
         return if (isBlackTurn) {
             var bestScore = Int.MIN_VALUE
             for (m in moves) {
-                total++
                 model.makeMoveSilent(m)
                 val score = alphaBeta(model, depth + 1, maxDepth, a, b, false)
                 model.unmakeMoveSilent(m)
@@ -79,7 +75,6 @@ object AiEngine {
         } else {
             var bestScore = Int.MAX_VALUE
             for (m in moves) {
-                total++
                 model.makeMoveSilent(m)
                 val score = alphaBeta(model, depth + 1, maxDepth, a, b, true)
                 model.unmakeMoveSilent(m)
